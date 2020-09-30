@@ -83,7 +83,7 @@
 		
 		//Render the DOM node to an image
 		//(Note: for some reason the DOM node appears to be offset when rendered with html2canvas, so we correct for this here)
-		html2canvas(node.get(0), {scale: 4, scrollX: -11, scrollY: 0}).then((canvas) =>
+		html2canvas(node.get(0), {scale: 4, scrollX: -8, scrollY: 0}).then((canvas) =>
 		{
 			//Trigger a download of the generated image
 			download('timezones.png', canvas.toDataURL());
