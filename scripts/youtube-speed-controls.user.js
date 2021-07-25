@@ -30,15 +30,25 @@
 	$('#player-container').append(overlay);
 	
 	// Sets the playback speed for the video
+	let lastTimeout = null;
 	function setPlaybackSpeed(speed)
 	{
 		// Update the playback speed
 		videoPlayer.playbackRate = speed;
 		
+		// If the overlay is already visible then remove the pending timeout to hide it
+		if (lastTimeout !== null) {
+			clearTimeout(lastTimeout);
+		}
+		
 		// Display the overlay for 1.5 seconds
 		overlay.text(`Set playback speed to ${speed}x`);
 		overlay.show();
-		setTimeout(() => { overlay.hide(); }, 1500);
+		lastTimeout = setTimeout(() => {
+			overlay.hide();
+			lastTimeout = null;
+		},
+		1500);
 	}
 	
 	// Wire up our keyboard shortcuts to control playback speed
@@ -51,15 +61,39 @@
 				break;
 			
 			case '2':
-				setPlaybackSpeed(2);
+				setPlaybackSpeed(1.25);
 				break;
 			
 			case '3':
-				setPlaybackSpeed(3);
+				setPlaybackSpeed(1.5);
 				break;
 			
 			case '4':
+				setPlaybackSpeed(1.75);
+				break;
+			
+			case '5':
+				setPlaybackSpeed(2);
+				break;
+			
+			case '6':
+				setPlaybackSpeed(2.5);
+				break;
+			
+			case '7':
+				setPlaybackSpeed(3);
+				break;
+			
+			case '8':
+				setPlaybackSpeed(3.5);
+				break;
+			
+			case '9':
 				setPlaybackSpeed(4);
+				break;
+			
+			case '0':
+				setPlaybackSpeed(0.5);
 				break;
 			
 			default:
