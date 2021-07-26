@@ -18,6 +18,7 @@
 	
 	// Create an overlay for displaying playback speed updates
 	let overlay = $(document.createElement('div'));
+	overlay.css('z-index', '9999999');
 	overlay.css('position', 'absolute');
 	overlay.css('left', '2rem');
 	overlay.css('top', '2rem');
@@ -107,4 +108,7 @@
 		return false;
 	},
 	{capture: true});
+	
+	// Set the initial playback speed to 1.0
+	setPlaybackSpeed(1);
 })();
