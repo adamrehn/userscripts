@@ -54,6 +54,6 @@
 		$('#subscribe-button ytd-subscribe-button-renderer').append(commentsToggle, relatedToggle);
 	}
 	
-	// Wait for all of the page elements to fully load before manipulating the DOM
+	// Wait for dynamic population of the page elements to complete before manipulating the DOM
 	window.setTimeout(setup, 1000);
 })();
