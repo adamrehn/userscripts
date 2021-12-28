@@ -57,6 +57,11 @@
 		// Wire up our keyboard shortcuts to control playback speed
 		document.addEventListener('keydown', (event) =>
 		{
+			// Don't intercept key combos such as Ctrl+0
+			if (event.ctrlKey === true) {
+				return true;
+			}
+			
 			switch (event.key)
 			{
 				case '1':
