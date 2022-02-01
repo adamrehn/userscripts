@@ -136,5 +136,6 @@
 	{
 		let observer = new MutationObserver(function() { performSetup(); });
 		observer.observe($('body').get(0), { childList: true, subtree: true });
+		performSetup();
 	}, 1000);
 })();
