@@ -28,11 +28,24 @@
 		return button;
 	}
 	
-	function setup()
+	// Keep track of whether we have completed setup
+	let setupDone = false;
+	
+	function performSetup()
 	{
-		// Grab a reference to the comments section and related videos sidebar
+		// Don't perform setup more than once
+		if (setupDone === true) {
+			return;
+		}
+		
+		// Grab a reference to the comments section, related videos sidebar, and the subscribe/subscribed button,
+		// and exit early if any of these elements can't be found (since this typically indicates that they haven't loaded yet)
 		let comments = $('#comments');
 		let related = $('#related');
+		let subscribeButton = $('#subscribe-button ytd-subscribe-button-renderer');
+		if (comments.get(0) === undefined || related.get(0) === undefined || subscribeButton.get(0) === undefined) {
+			return;
+		}
 		
 		// Hide both page elements by default
 		comments.hide();
@@ -51,9 +64,16 @@
 		});
 		
 		// Inject both toggle buttons immediately to the right of the subscribe/subscribed button
-		$('#subscribe-button ytd-subscribe-button-renderer').append(commentsToggle, relatedToggle);
+		subscribeButton.append(commentsToggle, relatedToggle);
+		
+		// Mark setup as complete
+		setupDone = true;
 	}
 	
 	// Wait for dynamic population of the page elements to complete before manipulating the DOM
-	window.setTimeout(setup, 1000);
+	window.setTimeout(function()
+	{
+		let observer = new MutationObserver(function() { performSetup(); });
+		observer.observe($('body').get(0), { childList: true, subtree: true });
+	}, 1000);
 })();

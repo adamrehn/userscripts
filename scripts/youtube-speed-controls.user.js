@@ -10,9 +10,17 @@
 
 (function()
 {
-	function setup()
+	// Keep track of whether we have completed setup
+	let setupDone = false;
+	
+	function performSetup()
 	{
-		// Retrieve the video playback element and exit early if it can't be found
+		// Don't perform setup more than once
+		if (setupDone === true) {
+			return;
+		}
+		
+		// Retrieve the video playback element and exit early if it can't be found (since this typically indicates that it hasn't loaded yet)
 		let videoPlayer = document.getElementsByTagName("video")[0];
 		if (videoPlayer === null || videoPlayer === undefined) {
 			return;
@@ -118,8 +126,15 @@
 		
 		// Set the initial playback speed to 1.0
 		setPlaybackSpeed(1);
+		
+		// Mark setup as complete
+		setupDone = true;
 	}
 	
 	// Wait for dynamic population of the page elements to complete before manipulating the DOM
-	window.setTimeout(setup, 1000);
+	window.setTimeout(function()
+	{
+		let observer = new MutationObserver(function() { performSetup(); });
+		observer.observe($('body').get(0), { childList: true, subtree: true });
+	}, 1000);
 })();
