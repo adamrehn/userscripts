@@ -62,6 +62,10 @@
 			else {
 				watched.show();
 			}
+			
+			// Increase the minimum height of sections titled "Older" when watched videos are hidden, in order to prevent excessive loading of old videos
+			let olderVideos = $("ytd-item-section-renderer #title-container span:contains('Older')").parents('#contents');
+			olderVideos.attr('style', (toggle.is(':checked')) ? 'min-height: 100vh !important' : '');
 		}
 		
 		// Wire up the event handler for the checkbox
