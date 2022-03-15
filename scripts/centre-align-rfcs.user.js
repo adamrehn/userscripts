@@ -5,6 +5,7 @@
 // @description  Removes left-alignment of IETF Drafts and RFCs at large resolutions.
 // @author       Adam Rehn
 // @match        https://tools.ietf.org/html/*
+// @match        https://datatracker.ietf.org/*
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
 // ==/UserScript==
 
