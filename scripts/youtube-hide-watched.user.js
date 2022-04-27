@@ -27,6 +27,32 @@
 		return button;
 	}
 	
+	function createCheckbox(text)
+	{
+		let label = $(document.createElement('label')).css('padding', '1rem').css('margin-right', '4rem');
+		let checkbox = $(document.createElement('input')).attr('type', 'checkbox').attr('checked', 'checked');
+		label.append(checkbox);
+		label.append(document.createTextNode(' ' + text));
+		return checkbox;
+	}
+	
+	function createDropdown(options, selected)
+	{
+		let dropdown = $(document.createElement('select'));
+		
+		for (const option of options)
+		{
+			let optionElement = $(document.createElement('option')).attr('value', option['value']).text(option['label']);
+			if (option['value'] == selected) {
+				optionElement.attr('selected', 'selected');
+			}
+			
+			dropdown.append(optionElement);
+		}
+		
+		return dropdown;
+	}
+	
 	function setup()
 	{
 		// Create a wrapper <p> to hold our controls
@@ -36,12 +62,35 @@
 			.css('padding', '2rem 0')
 			.css('border-bottom', '1px solid rgba(0, 0, 0, 0.1)');
 		
-		// Create our checkbox to toggle the visibility of watched videos
-		let label = $(document.createElement('label')).css('padding', '1rem').css('margin-right', '4rem');
-		let toggle = $(document.createElement('input')).attr('type', 'checkbox').attr('checked', 'checked');
-		label.append(toggle);
-		label.append(document.createTextNode(' Hide watched'));
-		wrapper.append(label);
+		// Create a checkbox to toggle the visibility of watched videos
+		let toggleHideWatched = createCheckbox('Hide watched videos');
+		wrapper.append(toggleHideWatched.parent());
+		
+		// Create a checkbox to toggle the visibility of old videos
+		let toggleHideOld = createCheckbox('Hide videos older than or equal to:');
+		toggleHideOld.parent().css('margin-right', '0');
+		wrapper.append(toggleHideOld.parent());
+		
+		// Create a dropdown to select the age threshold for hiding old videos
+		let ageThresholdDropdown = createDropdown(
+			[
+				{'value': '1', 'label': '1 month'},
+				{'value': '2', 'label': '2 months'},
+				{'value': '3', 'label': '3 months'},
+				{'value': '4', 'label': '4 months'},
+				{'value': '5', 'label': '5 months'},
+				{'value': '6', 'label': '6 months'},
+				{'value': '7', 'label': '7 months'},
+				{'value': '8', 'label': '8 months'},
+				{'value': '9', 'label': '9 months'},
+				{'value': '10', 'label': '10 months'},
+				{'value': '11', 'label': '11 months'},
+				{'value': '12', 'label': '12 months'}
+			],
+			'6'
+		);
+		ageThresholdDropdown.css('margin-right', '5rem');
+		wrapper.append(ageThresholdDropdown);
 		
 		// Create a button that links to the page for managing YouTube watch history
 		let link = $(document.createElement('a')).attr('target', '_blank').attr('href', 'https://myactivity.google.com/u/1/activitycontrols/youtube?utm_source=my-activity');
@@ -49,29 +98,70 @@
 		link.append(button);
 		wrapper.append(link);
 		
-		// Updates the visibility of watched videos based on whether the checkbox is checked
+		// Updates the visibility of videos based on which checkboxes are checked
 		function updateVisibility()
 		{
+			// Show all videos (this ensures videos reappear when changing the threshold value in the dropdown)
+			$('ytd-grid-video-renderer').show();
+			
+			// Determine whether we are hiding old videos
+			if (toggleHideOld.is(':checked'))
+			{
+				// Identify all of the videos that are older than the threshold selected in the dropdown
+				let firstOldVideo = -1;
+				let threshold = parseInt($('option:selected', ageThresholdDropdown).val());
+				let old = $("ytd-grid-video-renderer #metadata-line span.ytd-grid-video-renderer:contains('ago')").filter(function(index, element)
+				{
+					// Once we have found one video that meets the age threshold, the reverse chronological order guarantees that all subsequent videos will be older
+					if (firstOldVideo != -1 && index > firstOldVideo) {
+						return true;
+					}
+					
+					// Attempt to extract the age of the video
+					let ageComponents = $(element).text().replace('Streamed ', '').replace(' ago', '').split(' ');
+					if (ageComponents.length != 2) {
+						return true;
+					}
+					
+					// Parse the age value and determine whether it meets the threshold
+					// (Note that if the threshold is 12 months then the check for a unit of "year" is actually what gets triggered, rather than the month value)
+					let units = ageComponents[1].replace('s', '');
+					let value = parseInt(ageComponents[0]);
+					if (units == "year" || (units == "month" && !isNaN(value) && value >= threshold))
+					{
+						firstOldVideo = index;
+						return true;
+					}
+					else {
+						return false;
+					}
+					
+				}).parents('ytd-grid-video-renderer');
+				
+				// Hide the identified videos
+				old.hide();
+			}
+			
 			// Identify all of the videos that have already been watched
 			let watched = $('ytd-grid-video-renderer #progress').parents('ytd-grid-video-renderer');
 			
-			// Hide or show the watched videos based on whether the checkbox is checked
-			if (toggle.is(':checked')) {
+			// Determine whether we are hiding watched videos
+			if (toggleHideWatched.is(':checked')) {
 				watched.hide();
 			}
-			else {
-				watched.show();
-			}
 			
-			// Increase the minimum height of sections titled "Older" when watched videos are hidden, in order to prevent excessive loading of old videos
-			let olderVideos = $("ytd-item-section-renderer #title-container span:contains('Older')").parents('#contents');
-			olderVideos.attr('style', (toggle.is(':checked')) ? 'min-height: 100vh !important' : '');
+			// Increase the minimum height of sections titled "Older" when any videos are hidden, in order to prevent excessive repeated loading of old videos
+			let olderSections = $("ytd-item-section-renderer #title-container span:contains('Older')").parents('#contents');
+			olderSections.attr('style', (toggleHideWatched.is(':checked') || toggleHideOld.is(':checked')) ? 'min-height: 100vh !important' : '');
 		}
 		
-		// Wire up the event handler for the checkbox
-		toggle.change(function() {
-			updateVisibility();
-		});
+		// Wire up the event handler for the checkboxes and the dropdown
+		for (let element of [toggleHideWatched, toggleHideOld, ageThresholdDropdown])
+		{
+			element.change(function() {
+				updateVisibility();
+			});
+		}
 		
 		// Update the visibility of watched videos whenever new video thumbnails are loaded
 		let observer = new MutationObserver(function() { updateVisibility(); });
