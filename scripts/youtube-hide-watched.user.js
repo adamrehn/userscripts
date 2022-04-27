@@ -53,8 +53,25 @@
 		return dropdown;
 	}
 	
-	function setup()
+	// Keep track of whether we have completed setup
+	let setupDone = false;
+	let setupObserver = null;
+	
+	function performSetup()
 	{
+		// Don't perform setup more than once
+		if (setupDone === true) {
+			return;
+		}
+		
+		// Exit early if the #primary element can't be found (which indicates that it hasn't loaded yet)
+		if ($('#primary').length == 0) {
+			return;
+		}
+		
+		// Disable the top-level MutationObserver that is used to trigger the setup function
+		setupObserver.disconnect();
+		
 		// Create a wrapper <p> to hold our controls
 		let wrapper = $(document.createElement('p'))
 			.css('text-align', 'center')
@@ -164,16 +181,25 @@
 		}
 		
 		// Update the visibility of watched videos whenever new video thumbnails are loaded
-		let observer = new MutationObserver(function() { updateVisibility(); });
-		observer.observe($('#primary').get(0), { childList: true, subtree: true });
+		let videoObserver = new MutationObserver(function() { updateVisibility(); });
+		videoObserver.observe($('#primary').get(0), { childList: true, subtree: true });
 		
 		// Inject the controls at the top of the page
 		$('#primary').prepend(wrapper);
 		
-		// Set the initial visibility of the watched videos
+		// Set the initial video visibility
 		updateVisibility();
+		
+		// Mark setup as complete
+		setupDone = true;
 	}
 	
 	// Wait for dynamic population of the page elements to complete before manipulating the DOM
-	window.setTimeout(setup, 1000);
+	window.setTimeout(function()
+	{
+		setupObserver = new MutationObserver(function() { performSetup(); });
+		setupObserver.observe($('body').get(0), { childList: true, subtree: true });
+		performSetup();
+	}, 1000);
+	
 })();
