@@ -119,7 +119,7 @@
 		function updateVisibility()
 		{
 			// Show all videos (this ensures videos reappear when changing the threshold value in the dropdown)
-			$('ytd-grid-video-renderer').show();
+			$('ytd-grid-video-renderer, ytd-video-renderer').show();
 			
 			// Determine whether we are hiding old videos
 			if (toggleHideOld.is(':checked'))
@@ -127,7 +127,7 @@
 				// Identify all of the videos that are older than the threshold selected in the dropdown
 				let firstOldVideo = -1;
 				let threshold = parseInt($('option:selected', ageThresholdDropdown).val());
-				let old = $("ytd-grid-video-renderer #metadata-line span.ytd-grid-video-renderer:contains('ago')").filter(function(index, element)
+				let old = $("div #metadata #metadata-line span:last-of-type:contains('ago')").filter(function(index, element)
 				{
 					// Once we have found one video that meets the age threshold, the reverse chronological order guarantees that all subsequent videos will be older
 					if (firstOldVideo != -1 && index > firstOldVideo) {
@@ -153,14 +153,14 @@
 						return false;
 					}
 					
-				}).parents('ytd-grid-video-renderer');
+				}).parents('ytd-grid-video-renderer, ytd-video-renderer');
 				
 				// Hide the identified videos
 				old.hide();
 			}
 			
 			// Identify all of the videos that have already been watched
-			let watched = $('ytd-grid-video-renderer #progress').parents('ytd-grid-video-renderer');
+			let watched = $('ytd-grid-video-renderer #progress, ytd-video-renderer #progress').parents('ytd-grid-video-renderer, ytd-video-renderer');
 			
 			// Determine whether we are hiding watched videos
 			if (toggleHideWatched.is(':checked')) {
