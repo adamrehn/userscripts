@@ -5,7 +5,9 @@
 // @description  Provides functionality to toggle the visibility of related questions and "Hot Network Questions" on StackExchange websites.
 // @author       Adam Rehn
 // @match        https://*.stackexchange.com/questions/*
+// @match        https://askubuntu.com/questions/*
 // @match        https://stackoverflow.com/questions/*
+// @match        https://superuser.com/questions/*
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
 // ==/UserScript==
 
