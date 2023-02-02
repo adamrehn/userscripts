@@ -38,7 +38,7 @@
 		overlay.css('background', 'rgba(0,0,0,0.5)');
 		overlay.css('color', '#fff');
 		overlay.hide();
-		$('#player-container ytd-player').append(overlay);
+		$(videoPlayer.parentNode).append(overlay);
 		
 		// Sets the playback speed for the video
 		let lastTimeout = null;
