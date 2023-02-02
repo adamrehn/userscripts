@@ -5,7 +5,7 @@
 // @description  Provides functionality to toggle the visibility of various YouTube page elements.
 // @author       Adam Rehn
 // @match        https://www.youtube.com/*
-// @require      https://code.jquery.com/jquery-3.5.1.min.js
+// @require      https://code.jquery.com/jquery-3.6.3.min.js
 // ==/UserScript==
 
 (function()
