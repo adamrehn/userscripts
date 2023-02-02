@@ -21,8 +21,8 @@
 		button.css('font-family', 'Roboto');
 		button.css('font-size', '1.4rem');
 		button.css('font-weight', '500');
-		button.css('margin-left', '1rem');
-		button.css('padding', '0.25rem 1.5rem');
+		button.css('margin-right', '1rem');
+		button.css('padding', '1.25rem 2rem');
 		button.css('text-transform', 'uppercase');
 		button.text(label);
 		return button;
@@ -38,12 +38,12 @@
 			return;
 		}
 		
-		// Grab a reference to the comments section, related videos sidebar, and the subscribe/subscribed button,
+		// Grab a reference to the comments section, related videos sidebar, and the top button row,
 		// and exit early if any of these elements can't be found (since this typically indicates that they haven't loaded yet)
 		let comments = $('#comments');
 		let related = $('#related');
-		let subscribeButton = $('#subscribe-button ytd-subscribe-button-renderer');
-		if (comments.get(0) === undefined || related.get(0) === undefined || subscribeButton.get(0) === undefined) {
+		let topRow = $('#above-the-fold #top-row');
+		if (comments.get(0) === undefined || related.get(0) === undefined || topRow.get(0) === undefined) {
 			return;
 		}
 		
@@ -63,8 +63,16 @@
 			related.toggle();
 		});
 		
-		// Inject both toggle buttons immediately to the right of the subscribe/subscribed button
-		subscribeButton.append(commentsToggle, relatedToggle);
+		// Create a flex container to wrap the toggle buttons
+		let buttonWrapper = $(document.createElement('div'));
+		buttonWrapper.append(commentsToggle, relatedToggle);
+		buttonWrapper.css('display', 'flex');
+		buttonWrapper.css('flex-direction', 'row');
+		buttonWrapper.css('justify-content', 'flex-start');
+		buttonWrapper.css('padding', '1rem 0');
+		
+		// Inject the toggle buttons below the top row of buttons
+		$('#above-the-fold #bottom-row').before(buttonWrapper);
 		
 		// Mark setup as complete
 		setupDone = true;
