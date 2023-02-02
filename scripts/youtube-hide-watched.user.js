@@ -5,7 +5,7 @@
 // @description  Provides functionality to hide watched videos on the YouTube subscriptions page.
 // @author       Adam Rehn
 // @match        https://www.youtube.com/feed/subscriptions
-// @require      https://code.jquery.com/jquery-3.5.1.min.js
+// @require      https://code.jquery.com/jquery-3.6.3.min.js
 // ==/UserScript==
 
 (function()
@@ -51,6 +51,45 @@
 		}
 		
 		return dropdown;
+	}
+	
+	// Traverses the DOM (including the Shadow DOM) to find the first ancestor element that matches the specified selector
+	function findFirstAncestor(elem, selector)
+	{
+		let ancestor = elem;
+		while (ancestor !== null)
+		{
+			// Traverse up the DOM, switching to the real DOM element when we locate a ShadowRoot
+			if (ancestor.parentNode == null && ancestor.host !== undefined) {
+				ancestor = ancestor.host;
+			}
+			else {
+				ancestor = ancestor.parentNode;
+			}
+			
+			// Determine whether the current element matches the specified selector
+			if (ancestor !== null && ancestor.matches !== undefined && ancestor.matches(selector)) {
+				return ancestor;
+			}
+		}
+		
+		return null;
+	}
+	
+	// Alternative to jQuery.parents() that handles the Shadow DOM correctly
+	function findAncestors(elems, selector)
+	{
+		let ancestors = [];
+		
+		for (let elem of elems.get())
+		{
+			let parent = findFirstAncestor(elem, selector);
+			if (parent !== null) {
+				ancestors.push(parent);
+			}
+		}
+		
+		return $(ancestors);
 	}
 	
 	// Keep track of whether we have completed setup
@@ -127,7 +166,7 @@
 				// Identify all of the videos that are older than the threshold selected in the dropdown
 				let firstOldVideo = -1;
 				let threshold = parseInt($('option:selected', ageThresholdDropdown).val());
-				let old = $("div #metadata #metadata-line span:last-of-type:contains('ago')").filter(function(index, element)
+				let old = findAncestors($("div #metadata #metadata-line span:last-of-type:contains('ago')").filter(function(index, element)
 				{
 					// Once we have found one video that meets the age threshold, the reverse chronological order guarantees that all subsequent videos will be older
 					if (firstOldVideo != -1 && index > firstOldVideo) {
@@ -153,14 +192,14 @@
 						return false;
 					}
 					
-				}).parents('ytd-grid-video-renderer, ytd-video-renderer');
+				}), 'ytd-grid-video-renderer, ytd-video-renderer');
 				
 				// Hide the identified videos
 				old.hide();
 			}
 			
 			// Identify all of the videos that have already been watched
-			let watched = $('ytd-grid-video-renderer #progress, ytd-video-renderer #progress').parents('ytd-grid-video-renderer, ytd-video-renderer');
+			let watched = findAncestors($('ytd-thumbnail-overlay-resume-playback-renderer'), 'ytd-grid-video-renderer, ytd-video-renderer');
 			
 			// Determine whether we are hiding watched videos
 			if (toggleHideWatched.is(':checked')) {
@@ -168,7 +207,10 @@
 			}
 			
 			// Increase the minimum height of sections titled "Older" when any videos are hidden, in order to prevent excessive repeated loading of old videos
-			let olderSections = $("ytd-item-section-renderer #title-container span:contains('Older')").parents('#contents');
+			let olderTitles = $("ytd-item-section-renderer #title-container h2 span#title").filter(function(index, element) {
+				return element.innerText == 'Older';
+			});
+			let olderSections = findAncestors(olderTitles, '#contents');
 			olderSections.attr('style', (toggleHideWatched.is(':checked') || toggleHideOld.is(':checked')) ? 'min-height: 100vh !important' : '');
 		}
 		
