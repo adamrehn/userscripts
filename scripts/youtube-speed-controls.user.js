@@ -21,8 +21,14 @@
 		}
 		
 		// Retrieve the video playback element and exit early if it can't be found (since this typically indicates that it hasn't loaded yet)
-		let videoPlayer = document.getElementsByTagName("video")[0];
-		if (videoPlayer === null || videoPlayer === undefined) {
+		let videoPlayer = $('#movie_player video');
+		if (videoPlayer.length == 0) {
+			return;
+		}
+		
+		// Retrieve the search box, so we can avoid triggering speed changes when it has focus
+		let searchInput = $('ytd-searchbox input#search');
+		if (searchInput.length == 0) {
 			return;
 		}
 		
@@ -38,14 +44,14 @@
 		overlay.css('background', 'rgba(0,0,0,0.5)');
 		overlay.css('color', '#fff');
 		overlay.hide();
-		$(videoPlayer.parentNode).append(overlay);
+		videoPlayer.parent().append(overlay);
 		
 		// Sets the playback speed for the video
 		let lastTimeout = null;
 		function setPlaybackSpeed(speed)
 		{
 			// Update the playback speed
-			videoPlayer.playbackRate = speed;
+			videoPlayer[0].playbackRate = speed;
 			
 			// If the overlay is already visible then remove the pending timeout to hide it
 			if (lastTimeout !== null) {
@@ -65,6 +71,11 @@
 		// Wire up our keyboard shortcuts to control playback speed
 		document.addEventListener('keydown', (event) =>
 		{
+			// Don't trigger speed changes when the search box has focus
+			if (searchInput.is(':focus')) {
+				return true;
+			}
+			
 			// Don't intercept key combos such as Ctrl+0
 			if (event.ctrlKey === true) {
 				return true;
