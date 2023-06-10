@@ -122,6 +122,10 @@
 		let toggleHideWatched = createCheckbox('Hide watched videos');
 		wrapper.append(toggleHideWatched.parent());
 		
+		// Create a checkbox to toggle the visibility of YouTube Shorts
+		let toggleHideShorts = createCheckbox('Hide Shorts');
+		wrapper.append(toggleHideShorts.parent());
+		
 		// Create a checkbox to toggle the visibility of old videos
 		let toggleHideOld = createCheckbox('Hide videos older than or equal to:');
 		toggleHideOld.parent().css('margin-right', '0');
@@ -157,7 +161,7 @@
 		// Updates the visibility of videos based on which checkboxes are checked
 		function updateVisibility()
 		{
-			// Show all videos (this ensures videos reappear when changing the threshold value in the dropdown)
+			// Make all videos visible that had previously been hidden based on age (this ensures videos reappear when changing the threshold value in the dropdown)
 			$('ytd-rich-item-renderer').css('visibility', 'visible');
 			
 			// Determine whether we are hiding old videos
@@ -216,10 +220,22 @@
 			else {
 				watched.show();
 			}
+			
+			// Identify all YouTube Shorts
+			let shorts = findAncestors($('ytd-thumbnail-overlay-time-status-renderer[overlay-style="SHORTS"]'), 'ytd-rich-item-renderer');
+			
+			// Determine whether we are hiding YouTube Shorts
+			if (toggleHideShorts.is(':checked')) {
+				shorts.hide();
+			}
+			else {
+				shorts.show();
+			}
+			
 		}
 		
 		// Wire up the event handler for the checkboxes and the dropdown
-		for (let element of [toggleHideWatched, toggleHideOld, ageThresholdDropdown])
+		for (let element of [toggleHideWatched, toggleHideShorts, toggleHideOld, ageThresholdDropdown])
 		{
 			element.change(function() {
 				updateVisibility();
