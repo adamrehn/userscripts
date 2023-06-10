@@ -158,7 +158,7 @@
 		function updateVisibility()
 		{
 			// Show all videos (this ensures videos reappear when changing the threshold value in the dropdown)
-			$('ytd-grid-video-renderer, ytd-video-renderer').show();
+			$('ytd-rich-item-renderer').css('visibility', 'visible');
 			
 			// Determine whether we are hiding old videos
 			if (toggleHideOld.is(':checked'))
@@ -166,17 +166,24 @@
 				// Identify all of the videos that are older than the threshold selected in the dropdown
 				let firstOldVideo = -1;
 				let threshold = parseInt($('option:selected', ageThresholdDropdown).val());
-				let old = findAncestors($("div #metadata #metadata-line span:last-of-type:contains('ago')").filter(function(index, element)
+				let old = findAncestors($("ytd-rich-item-renderer ytd-video-meta-block span.inline-metadata-item").filter(function(index, element)
 				{
 					// Once we have found one video that meets the age threshold, the reverse chronological order guarantees that all subsequent videos will be older
 					if (firstOldVideo != -1 && index > firstOldVideo) {
 						return true;
 					}
 					
+					// Verify that this metadata line contains the video age
+					// (Note: we used to use a `:contains('ago')` suffix in the element selector above, but programmatic text matching appears to be more reliable)
+					let text = $(element).text();
+					if (text.indexOf('ago') == -1) {
+						return false;
+					}
+					
 					// Attempt to extract the age of the video
-					let ageComponents = $(element).text().replace('Streamed ', '').replace(' ago', '').split(' ');
+					let ageComponents = text.replace('Streamed ', '').replace(' ago', '').split(' ');
 					if (ageComponents.length != 2) {
-						return true;
+						return false;
 					}
 					
 					// Parse the age value and determine whether it meets the threshold
@@ -192,26 +199,23 @@
 						return false;
 					}
 					
-				}), 'ytd-grid-video-renderer, ytd-video-renderer');
+				}), 'ytd-rich-item-renderer');
 				
 				// Hide the identified videos
-				old.hide();
+				// (Note that we set them to invisible but do not take them out of the document layout, in order to prevent excessive repeated loading of old videos)
+				old.css('visibility', 'hidden');
 			}
 			
 			// Identify all of the videos that have already been watched
-			let watched = findAncestors($('ytd-thumbnail-overlay-resume-playback-renderer'), 'ytd-grid-video-renderer, ytd-video-renderer');
+			let watched = findAncestors($('ytd-thumbnail-overlay-resume-playback-renderer'), 'ytd-rich-item-renderer');
 			
 			// Determine whether we are hiding watched videos
 			if (toggleHideWatched.is(':checked')) {
 				watched.hide();
 			}
-			
-			// Increase the minimum height of sections titled "Older" when any videos are hidden, in order to prevent excessive repeated loading of old videos
-			let olderTitles = $("ytd-item-section-renderer #title-container h2 span#title").filter(function(index, element) {
-				return element.innerText == 'Older';
-			});
-			let olderSections = findAncestors(olderTitles, '#contents');
-			olderSections.attr('style', (toggleHideWatched.is(':checked') || toggleHideOld.is(':checked')) ? 'min-height: 100vh !important' : '');
+			else {
+				watched.show();
+			}
 		}
 		
 		// Wire up the event handler for the checkboxes and the dropdown
