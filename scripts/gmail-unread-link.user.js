@@ -12,19 +12,19 @@
 {
 	window.setTimeout(function()
 	{
-		// Attempt to locate the navigation items for "Inbox" and "Important"
+		// Attempt to locate the navigation items for "Inbox" and "Send"
 		var inboxLabel = $('div[data-tooltip="Inbox"]');
-		var importantLabel = $('div[data-tooltip="Important"]');
+		var sentLabel = $('div[data-tooltip="Sent"]');
 		if (inboxLabel.length == 1)
 		{
-			// Create a new navigation item for "Unread", using the "Important" item as a template
-			var template = importantLabel.parent();
+			// Create a new navigation item for "Unread", using the "Sent" item as a template
+			var template = sentLabel.parent();
 			var unreadLabel = $(document.createElement('div'));
 			unreadLabel.html(template.html());
 			unreadLabel.removeAttr('id');
 			
 			// Set the tooltip for the new item
-			var tooltip = $('div[data-tooltip="Important"]', unreadLabel);
+			var tooltip = $('div[data-tooltip="Sent"]', unreadLabel);
 			tooltip.attr('data-tooltip', 'Unread');
 			tooltip.removeAttr('id');
 			
