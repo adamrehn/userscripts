@@ -222,7 +222,7 @@
 			}
 			
 			// Identify all YouTube Shorts
-			let shorts = findAncestors($('ytd-rich-grid-slim-media'), 'ytd-rich-section-renderer');
+			let shorts = findAncestors($('h2 yt-icon svg'), 'ytd-rich-section-renderer');
 			
 			// Determine whether we are hiding YouTube Shorts
 			if (toggleHideShorts.is(':checked')) {
