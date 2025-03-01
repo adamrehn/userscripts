@@ -27,7 +27,7 @@
 		}
 		
 		// Retrieve the search box, so we can avoid triggering speed changes when it has focus
-		let searchInput = $('ytd-searchbox input#search');
+		let searchInput = $('yt-searchbox input.yt-searchbox-input');
 		if (searchInput.length == 0) {
 			return;
 		}
