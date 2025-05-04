@@ -38,18 +38,20 @@
 			return;
 		}
 		
-		// Grab a reference to the comments section, related videos sidebar, and the top button row,
+		// Grab a reference to the comments section, related videos sidebar, end screen related videos, and the top button row,
 		// and exit early if any of these elements can't be found (since this typically indicates that they haven't loaded yet)
 		let comments = $('#comments');
 		let related = $('#related');
+		let endScreen = $('.ytp-endscreen-content');
 		let topRow = $('#above-the-fold #top-row');
 		if (comments.get(0) === undefined || related.get(0) === undefined || topRow.get(0) === undefined) {
 			return;
 		}
 		
-		// Hide both page elements by default
+		// Hide the page elements by default
 		comments.hide();
 		related.hide();
+		endScreen.hide();
 		
 		// Create a button to toggle the visibility of the comments section
 		let commentsToggle = createButton('Toggle comments');
@@ -57,10 +59,12 @@
 			comments.toggle();
 		});
 		
-		// Create a button to toggle the visibility of the related videos sidebar
+		// Create a button to toggle the visibility of the related videos (both the sidebar and the end screen)
 		let relatedToggle = createButton('Toggle related');
-		relatedToggle.click(function() {
+		relatedToggle.click(function()
+		{
 			related.toggle();
+			endScreen.toggle();
 		});
 		
 		// Create a flex container to wrap the toggle buttons
