@@ -170,7 +170,7 @@
 				// Identify all of the videos that are older than the threshold selected in the dropdown
 				let firstOldVideo = -1;
 				let threshold = parseInt($('option:selected', ageThresholdDropdown).val());
-				let old = findAncestors($("ytd-rich-item-renderer ytd-video-meta-block span.inline-metadata-item").filter(function(index, element)
+				let old = findAncestors($("ytd-rich-item-renderer span.yt-content-metadata-view-model__metadata-text:last-child").filter(function(index, element)
 				{
 					// Once we have found one video that meets the age threshold, the reverse chronological order guarantees that all subsequent videos will be older
 					if (firstOldVideo != -1 && index > firstOldVideo) {
