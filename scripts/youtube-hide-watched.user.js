@@ -211,7 +211,7 @@
 			}
 			
 			// Identify all of the videos that have already been watched
-			let watched = findAncestors($('ytd-thumbnail-overlay-resume-playback-renderer'), 'ytd-rich-item-renderer');
+			let watched = findAncestors($('yt-thumbnail-overlay-progress-bar-view-model'), 'ytd-rich-item-renderer');
 			
 			// Determine whether we are hiding watched videos
 			if (toggleHideWatched.is(':checked')) {
