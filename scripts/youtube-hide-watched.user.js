@@ -153,10 +153,17 @@
 		wrapper.append(ageThresholdDropdown);
 		
 		// Create a button that links to the page for managing YouTube watch history
-		let link = $(document.createElement('a')).attr('target', '_blank').attr('href', 'https://myactivity.google.com/u/1/activitycontrols/youtube?utm_source=my-activity');
-		let button = createButton('Manage Watch History');
-		link.append(button);
-		wrapper.append(link);
+		let historyLink = $(document.createElement('a')).attr('target', '_blank').attr('href', 'https://myactivity.google.com/u/1/activitycontrols/youtube?utm_source=my-activity');
+		let historyButton = createButton('Manage Watch History');
+		historyButton.css('margin-right', '2.5rem');
+		historyLink.append(historyButton);
+		wrapper.append(historyLink);
+		
+		// Create a button that links to the page for managing hidden videos
+		let feedbackLink = $(document.createElement('a')).attr('target', '_blank').attr('href', 'https://myactivity.google.com/page?utm_source=my-activity&hl=en&page=youtube_user_feedback');
+		let feedbackButton = createButton('Manage Hidden Videos');
+		feedbackLink.append(feedbackButton);
+		wrapper.append(feedbackLink);
 		
 		// Updates the visibility of videos based on which checkboxes are checked
 		function updateVisibility()
