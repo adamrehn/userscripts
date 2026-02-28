@@ -5,7 +5,7 @@
 // @description  Save selected Time Zone Converter cities and times as images
 // @author       Adam Rehn
 // @match        https://www.timeanddate.com/worldclock/*
-// @require      https://code.jquery.com/jquery-3.5.1.min.js
+// @require      https://code.jquery.com/jquery-4.0.0.min.js
 // @require      https://html2canvas.hertzen.com/dist/html2canvas.min.js
 // ==/UserScript==
 

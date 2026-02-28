@@ -5,7 +5,7 @@
 // @description  Adds an "Unread" link to Gmail's navigation menu.
 // @author       Adam Rehn
 // @match        https://mail.google.com/*
-// @require      https://code.jquery.com/jquery-3.5.1.min.js
+// @require      https://code.jquery.com/jquery-4.0.0.min.js
 // ==/UserScript==
 
 (function()

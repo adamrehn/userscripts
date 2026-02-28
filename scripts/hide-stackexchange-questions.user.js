@@ -9,7 +9,7 @@
 // @match        https://serverfault.com/questions/*
 // @match        https://stackoverflow.com/questions/*
 // @match        https://superuser.com/questions/*
-// @require      https://code.jquery.com/jquery-3.5.1.min.js
+// @require      https://code.jquery.com/jquery-4.0.0.min.js
 // ==/UserScript==
 
 (function()

@@ -5,7 +5,7 @@
 // @description  Provides functionality to hide watched videos on the YouTube subscriptions page.
 // @author       Adam Rehn
 // @match        https://www.youtube.com/feed/subscriptions
-// @require      https://code.jquery.com/jquery-3.6.3.min.js
+// @require      https://code.jquery.com/jquery-4.0.0.min.js
 // ==/UserScript==
 
 (function()

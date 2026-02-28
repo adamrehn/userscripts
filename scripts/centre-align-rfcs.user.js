@@ -6,7 +6,7 @@
 // @author       Adam Rehn
 // @match        https://tools.ietf.org/html/*
 // @match        https://datatracker.ietf.org/*
-// @require      https://code.jquery.com/jquery-3.5.1.min.js
+// @require      https://code.jquery.com/jquery-4.0.0.min.js
 // ==/UserScript==
 
 (function()

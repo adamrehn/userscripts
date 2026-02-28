@@ -5,7 +5,7 @@
 // @description  Add option to automatically refresh a GitLab issues list
 // @author       Adam Rehn
 // @match        https://gitlab.com/*/issues/*
-// @require      https://code.jquery.com/jquery-3.5.1.min.js
+// @require      https://code.jquery.com/jquery-4.0.0.min.js
 // ==/UserScript==
 
 (function()
