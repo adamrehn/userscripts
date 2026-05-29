@@ -201,6 +201,8 @@
 					// (Note that if the threshold is 12 months then the check for a unit of "year" is actually what gets triggered, rather than the month value)
 					let units = ageComponents[1].replace('s', '');
 					let value = parseInt(ageComponents[0]);
+					if (units == "mo") { units = "month"; }
+					if (units == "yr") { units = "year"; }
 					if (units == "year" || (units == "month" && !isNaN(value) && value >= threshold))
 					{
 						firstOldVideo = index;
